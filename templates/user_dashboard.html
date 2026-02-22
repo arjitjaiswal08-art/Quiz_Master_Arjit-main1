@@ -1,0 +1,102 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/user">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white"><i class="bi bi-person-circle"></i> {{ user.name }}</span>
+            <ul class="navbar-nav-custom">
+                <li class="nav-item">
+                    <a class="nav-link-custom" href="/user/history">
+                        <i class="bi bi-clock-history"></i> History
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-custom" href="/user_logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <!-- Welcome Section -->
+    <div class="page-header">
+        <h1 class="page-title">Welcome, {{ user.name }}!</h1>
+        <p class="page-subtitle">Explore available quizzes and test your knowledge</p>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-container mb-4">
+        <div class="stat-card primary">
+            <div class="stat-icon"><i class="bi bi-question-circle"></i></div>
+            <div class="stat-value">{{ quizzes|length }}</div>
+            <div class="stat-label">Available Quizzes</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon"><i class="bi bi-book"></i></div>
+            <div class="stat-value">{{ subjects_count|default(0) }}</div>
+            <div class="stat-label">Subjects</div>
+        </div>
+        <div class="stat-card info">
+            <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+            <div class="stat-value">{{ attempted_count|default(0) }}</div>
+            <div class="stat-label">Your Attempts</div>
+        </div>
+    </div>
+
+    <!-- Available Quizzes -->
+    <h3 class="section-title"><i class="bi bi-grid-3x3-gap"></i> Available Quizzes</h3>
+    
+    {% if quizzes %}
+    <div class="quiz-grid">
+        {% for quiz in quizzes %}
+        <div class="quiz-card">
+            <div class="quiz-card-header">
+                <span class="quiz-card-subject">{{ quiz.chapter.subject.name }}</span>
+                <h4 class="quiz-card-title">{{ quiz.name }}</h4>
+                <p class="quiz-card-chapter"><i class="bi bi-folder"></i> {{ quiz.chapter.name }}</p>
+            </div>
+            <div class="quiz-card-body">
+                <div class="quiz-card-meta">
+                    <div class="quiz-card-meta-item">
+                        <i class="bi bi-calendar-event"></i>
+                        {{ quiz.date_of_quiz.strftime('%b %d, %Y') }}
+                    </div>
+                    <div class="quiz-card-meta-item">
+                        <i class="bi bi-clock"></i>
+                        {{ quiz.time_duration }} min
+                    </div>
+                </div>
+                {% if quiz.remarks %}
+                <p class="text-muted small mb-0"><i class="bi bi-info-circle"></i> {{ quiz.remarks }}</p>
+                {% endif %}
+            </div>
+            <div class="quiz-card-footer">
+                <span class="quiz-card-questions">
+                    <i class="bi bi-list-ol"></i> {{ quiz.questions|length }} Questions
+                </span>
+                <a href="/start_quiz/{{ quiz.id }}" class="btn-custom btn-custom-primary btn-custom-sm">
+                    <i class="bi bi-play-fill"></i> Start
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="modern-card">
+        <div class="empty-state">
+            <i class="bi bi-inbox empty-state-icon"></i>
+            <h4 class="empty-state-title">No Quizzes Available</h4>
+            <p class="empty-state-desc">Check back later for new quizzes</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

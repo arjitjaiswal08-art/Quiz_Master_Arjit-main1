@@ -1,0 +1,58 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">Quiz Master</a>
+        <ul class="navbar-nav ml-auto">
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="/create_chapter">Create Chapter</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+</nav>
+  <div class="container d-flex justify-content-center mt-5">
+    <div class="card" style="width: 25rem;">
+      <div class="card-body">
+        <h5 class="card-title text-center">Edit Question</h5>
+        <form action="/edit_question/{{ question.id }}" method="post">
+          <div class="mb-3">
+            <label for="question_statement" class="form-label">Question Statement</label>
+            <textarea class="form-control" id="question_statement" name="question_statement" rows="3" placeholder="Enter question statement" required>{{ question.question_text }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="option_1" class="form-label">Option 1</label>
+            <input type="text" class="form-control" id="option_1" name="option_1" placeholder="Option 1" required value="{{ question.option_1 }}">
+          </div>
+
+          <div class="mb-3">
+            <label for="option_2" class="form-label">Option 2</label>
+            <input type="text" class="form-control" id="option_2" name="option_2" placeholder="Option 2" required value="{{ question.option_2 }}">
+          </div>
+
+          <div class="mb-3">
+            <label for="option_3" class="form-label">Option 3</label>
+            <input type="text" class="form-control" id="option_3" name="option_3" placeholder="Option 3" required value="{{ question.option_3 }}">
+          </div>
+
+          <div class="mb-3">
+            <label for="option_4" class="form-label">Option 4</label>
+            <input type="text" class="form-control" id="option_4" name="option_4" placeholder="Option 4" required value="{{ question.option_4 }}">
+          </div>
+
+          <div class="mb-3">
+            <label for="correct_option" class="form-label">Correct Option</label>
+            <input type="text" class="form-control" id="correct_option" name="correct_option" placeholder="Enter answer" required min="1" max="4" value="{{ question.correct_answer }}">
+          </div>
+          <button type="submit" class="btn btn-primary">Edit Question</button>
+          </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

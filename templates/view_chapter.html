@@ -1,0 +1,105 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/admin">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <ul class="navbar-nav-custom">
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/view_subjects/{{ chapter.subject.id }}">
+                    <i class="bi bi-arrow-left"></i> Back to Subject
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/admin_logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/view_subjects/{{ chapter.subject.id }}">{{ chapter.subject.name }}</a></li>
+            <li class="breadcrumb-item active">{{ chapter.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title"><i class="bi bi-journal-text text-info"></i> {{ chapter.name }}</h1>
+        <p class="page-subtitle">{{ chapter.description }}</p>
+    </div>
+
+    <!-- Quizzes Card -->
+    <div class="modern-card">
+        <div class="card-header-custom">
+            <div class="card-header-title">
+                <i class="bi bi-question-circle"></i> Quizzes
+            </div>
+            <a href="/create_quiz/{{ chapter.id }}" class="btn-custom btn-custom-primary btn-custom-sm">
+                <i class="bi bi-plus-lg"></i> Create Quiz
+            </a>
+        </div>
+        <div class="card-body-custom p-0">
+            {% if quizzes %}
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Quiz Name</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Remarks</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-question-diamond text-primary"></i>
+                                <strong>{{ quiz.name }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ quiz.date_of_quiz.strftime('%b %d, %Y') }}</td>
+                        <td>{{ quiz.time_duration }} min</td>
+                        <td>{{ quiz.remarks or '-' }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="/edit_quiz/{{ quiz.id }}" class="btn-custom btn-custom-info btn-custom-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/view_quiz/{{ quiz.id }}" class="btn-custom btn-custom-warning btn-custom-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="/delete_quiz/{{ quiz.id }}" class="btn-custom btn-custom-danger btn-custom-sm" onclick="return confirm('Delete this quiz?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-question-square empty-state-icon"></i>
+                <h4 class="empty-state-title">No Quizzes Yet</h4>
+                <p class="empty-state-desc">Create your first quiz for this chapter</p>
+                <a href="/create_quiz/{{ chapter.id }}" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-plus-lg"></i> Create Quiz
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

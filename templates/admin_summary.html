@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">Quiz Master</a>
+        <ul class="navbar-nav ml-auto">
+          <!--<li class="nav-item">
+            <a class="nav-link" href="/create_subject">Create Subject</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="/admin_logout">Logout</a>
+          </li>
+          <form class="d-flex" role="search" method="get" action="/admin/search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <h3 class="card-header">Quiz per subject</h3>
+            <img src="{{ img_1 }}" class="card-img-top" alt="Quiz per subject">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <h3 class="card-header">User attempts per subject</h3>
+            <img src="{{ img_2 }}" class="card-img-top" alt="User attempts per subject">
+        </div>
+    </div>
+</div>
+
+
+ {% endblock %}                 

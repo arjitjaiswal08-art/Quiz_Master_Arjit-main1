@@ -1,0 +1,100 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/admin">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <ul class="navbar-nav-custom">
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/admin">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/admin_logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item active">{{ subject.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title"><i class="bi bi-folder text-primary"></i> {{ subject.name }}</h1>
+        <p class="page-subtitle">{{ subject.description }}</p>
+    </div>
+
+    <!-- Chapters Card -->
+    <div class="modern-card">
+        <div class="card-header-custom">
+            <div class="card-header-title">
+                <i class="bi bi-collection"></i> Chapters
+            </div>
+            <a href="/create_chapter/{{ subject.id }}" class="btn-custom btn-custom-primary btn-custom-sm">
+                <i class="bi bi-plus-lg"></i> Add Chapter
+            </a>
+        </div>
+        <div class="card-body-custom p-0">
+            {% if chapters %}
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Chapter Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chapter in chapters %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-journal-text text-info"></i>
+                                <strong>{{ chapter.name }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ chapter.description }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="/edit_chapter/{{ chapter.id }}" class="btn-custom btn-custom-info btn-custom-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/view_chapter/{{ chapter.id }}" class="btn-custom btn-custom-warning btn-custom-sm">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="/delete_chapter/{{ chapter.id }}" class="btn-custom btn-custom-danger btn-custom-sm" onclick="return confirm('Delete this chapter?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-journal-x empty-state-icon"></i>
+                <h4 class="empty-state-title">No Chapters Yet</h4>
+                <p class="empty-state-desc">Add your first chapter to this subject</p>
+                <a href="/create_chapter/{{ subject.id }}" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-plus-lg"></i> Add Chapter
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

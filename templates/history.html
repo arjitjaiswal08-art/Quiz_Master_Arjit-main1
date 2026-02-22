@@ -1,0 +1,126 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/user">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-white"><i class="bi bi-person-circle"></i> {{ user.name }}</span>
+            <ul class="navbar-nav-custom">
+                <li class="nav-item">
+                    <a class="nav-link-custom active" href="/user/history">
+                        <i class="bi bi-clock-history"></i> History
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-custom" href="/user_logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Quiz History</h1>
+        <p class="page-subtitle">View all your past quiz attempts and performance</p>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="stats-container mb-4">
+        <div class="stat-card primary">
+            <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+            <div class="stat-value">{{ scores|length }}</div>
+            <div class="stat-label">Total Attempts</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon"><i class="bi bi-trophy"></i></div>
+            <div class="stat-value">
+                {% if scores %}{{ (scores|sum(attribute='score') / scores|sum(attribute='total_scored') * 100)|int }}%{% else %}0%{% endif %}
+            </div>
+            <div class="stat-label">Average Score</div>
+        </div>
+        <div class="stat-card info">
+            <div class="stat-icon"><i class="bi bi-star-fill"></i></div>
+            <div class="stat-value">{{ scores|map(attribute='score')|max|default(0) }}</div>
+            <div class="stat-label">Best Score</div>
+        </div>
+    </div>
+
+    <!-- History Table -->
+    <div class="modern-card">
+        <div class="card-header-custom">
+            <div class="card-header-title">
+                <i class="bi bi-clock-history"></i> Your Quiz Attempts
+            </div>
+            <a href="/quiz_chart" class="btn-custom btn-custom-info btn-custom-sm">
+                <i class="bi bi-bar-chart"></i> View Statistics
+            </a>
+        </div>
+        <div class="card-body-custom p-0">
+            {% if scores %}
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Quiz</th>
+                        <th>Subject</th>
+                        <th>Chapter</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                    {% set percentage = (score.score / score.total_scored * 100)|int %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-question-circle text-primary"></i>
+                                <strong>{{ score.quiz.name }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ score.quiz.chapter.subject.name }}</td>
+                        <td>{{ score.quiz.chapter.name }}</td>
+                        <td>
+                            <span class="badge-custom {% if percentage >= 70 %}badge-custom-success{% elif percentage >= 40 %}badge-custom-warning{% else %}badge-custom-danger{% endif %}">
+                                {{ score.score }}/{{ score.total_scored }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="progress flex-grow-1" style="height: 8px; max-width: 100px;">
+                                    <div class="progress-bar {% if percentage >= 70 %}bg-success{% elif percentage >= 40 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         style="width: {{ percentage }}%"></div>
+                                </div>
+                                <span class="small">{{ percentage }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <i class="bi bi-calendar text-muted"></i>
+                            {{ score.timestamp.strftime('%b %d, %Y %H:%M') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox empty-state-icon"></i>
+                <h4 class="empty-state-title">No Quiz History</h4>
+                <p class="empty-state-desc">You haven't attempted any quizzes yet</p>
+                <a href="/user" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-grid"></i> Browse Quizzes
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

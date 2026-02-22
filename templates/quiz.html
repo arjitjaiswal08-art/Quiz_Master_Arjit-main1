@@ -1,0 +1,115 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/user">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <ul class="navbar-nav-custom">
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/user/history">
+                    <i class="bi bi-clock-history"></i> History
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/user_logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <!-- Quiz Timer -->
+    <div id="quizTimer" class="quiz-timer mb-4" data-duration="{{ quiz.time_duration }}">
+        <i class="bi bi-clock"></i>
+        <span id="timerDisplay">{{ quiz.time_duration }}:00</span>
+    </div>
+
+    <!-- Quiz Header -->
+    <div class="text-center mb-4">
+        <span class="badge-custom badge-custom-info mb-2">{{ quiz.chapter.subject.name }}</span>
+        <h2 class="page-title">{{ quiz.name }}</h2>
+        <p class="page-subtitle">
+            <i class="bi bi-folder"></i> {{ quiz.chapter.name }} | 
+            <i class="bi bi-list-ol"></i> {{ questions|length }} Questions | 
+            <i class="bi bi-clock"></i> {{ quiz.time_duration }} Minutes
+        </p>
+    </div>
+
+    <!-- Quiz Form -->
+    <form id="quizForm" action="/submit_quiz/{{ quiz.id }}" method="post">
+        {% for question in questions %}
+        <div class="question-card">
+            <span class="question-number">Question {{ loop.index }}</span>
+            <p class="question-text">{{ question.question_text }}</p>
+            
+            <div class="options-list">
+                <div class="option-item" onclick="selectOption(this, '{{ question.id }}', '1')">
+                    <input type="radio" name="{{ question.id }}" id="q{{ question.id }}_1" value="1" required>
+                    <label for="q{{ question.id }}_1">{{ question.option_1 }}</label>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '{{ question.id }}', '2')">
+                    <input type="radio" name="{{ question.id }}" id="q{{ question.id }}_2" value="2">
+                    <label for="q{{ question.id }}_2">{{ question.option_2 }}</label>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '{{ question.id }}', '3')">
+                    <input type="radio" name="{{ question.id }}" id="q{{ question.id }}_3" value="3">
+                    <label for="q{{ question.id }}_3">{{ question.option_3 }}</label>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '{{ question.id }}', '4')">
+                    <input type="radio" name="{{ question.id }}" id="q{{ question.id }}_4" value="4">
+                    <label for="q{{ question.id }}_4">{{ question.option_4 }}</label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn-primary-custom" style="max-width: 300px;">
+                <i class="bi bi-check2-circle"></i> Submit Quiz
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Timer functionality
+const timerElement = document.getElementById('quizTimer');
+const timerDisplay = document.getElementById('timerDisplay');
+const duration = parseInt(timerElement.dataset.duration);
+let totalSeconds = duration * 60;
+
+function updateTimer() {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (totalSeconds <= 60) {
+        timerElement.classList.add('danger');
+        timerElement.classList.remove('warning');
+    } else if (totalSeconds <= 300) {
+        timerElement.classList.add('warning');
+    }
+    
+    if (totalSeconds <= 0) {
+        document.getElementById('quizForm').submit();
+    }
+    
+    totalSeconds--;
+}
+
+setInterval(updateTimer, 1000);
+
+// Option selection styling
+function selectOption(element, questionId, value) {
+    const options = element.parentElement.querySelectorAll('.option-item');
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+}
+</script>
+{% endblock %}
+          

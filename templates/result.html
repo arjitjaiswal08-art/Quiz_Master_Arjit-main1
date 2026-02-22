@@ -1,0 +1,70 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/user">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <ul class="navbar-nav-custom">
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/user/history">
+                    <i class="bi bi-clock-history"></i> History
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/user_logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="modern-card">
+        <div class="result-container">
+            {% set percentage = (score / total_score * 100)|int %}
+            
+            {% if percentage >= 70 %}
+            <i class="bi bi-trophy-fill result-icon success"></i>
+            <h2 class="mb-2">Excellent Work!</h2>
+            {% elif percentage >= 40 %}
+            <i class="bi bi-emoji-smile-fill result-icon warning"></i>
+            <h2 class="mb-2">Good Job!</h2>
+            {% else %}
+            <i class="bi bi-emoji-frown-fill result-icon danger"></i>
+            <h2 class="mb-2">Keep Practicing!</h2>
+            {% endif %}
+            
+            <div class="result-score">{{ percentage }}%</div>
+            <p class="result-message">You scored {{ score }} out of {{ total_score }} questions correctly</p>
+            
+            <div class="result-stats">
+                <div class="result-stat">
+                    <div class="result-stat-value">{{ score }}</div>
+                    <div class="result-stat-label">Correct</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value">{{ total_score - score }}</div>
+                    <div class="result-stat-label">Incorrect</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value">{{ total_score }}</div>
+                    <div class="result-stat-label">Total</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="/user" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-grid"></i> Back to Dashboard
+                </a>
+                <a href="/user/history" class="btn-custom btn-custom-outline">
+                    <i class="bi bi-clock-history"></i> View History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

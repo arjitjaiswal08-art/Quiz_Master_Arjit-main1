@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">Quiz Master</a>
+        <ul class="navbar-nav ml-auto">
+          <!--<li class="nav-item">
+            <a class="nav-link" href="/create_subject">Create Subject</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="/admin_logout">Logout</a>
+          </li>
+          <form class="d-flex" role="search" method="get" action="/admin/search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name = "query">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </ul>
+      </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="text-center">Search Results</h3>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if users %}
+                    {% for user in users %}
+                    <tr>
+                        <td>User</td>
+                        <td>{{ user.name }}</td>
+                        <td>
+                            <a href="/admin/view_user/{{ user.id }}" class="btn btn-warning">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if subjects %}
+                    {% for subject in subjects %}
+                    <tr>
+                        <td>Subject</td>
+                        <td>{{ subject.name }}</td>
+                        <td>
+                            <a href="/admin/view_subject/{{ subject.id }}" class="btn btn-warning">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if chapters %}
+                    {% for chapter in chapters %}
+                    <tr>
+                        <td>Chapter</td>
+                        <td>{{ chapter.name }}</td>
+                        <td>
+                            <a href="/admin/view_chapter/{{ chapter.id }}" class="btn btn-warning">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if quizzes %}
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>Quiz</td>
+                        <td>{{ quiz.name }}</td>
+                        <td>
+                            <a href="/admin/view_quiz/{{ quiz.id }}" class="btn btn-warning">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+            {% if not users and not subjects and not chapters and not quizzes %}
+            <p>No Results Found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+                   
+{% endblock %}

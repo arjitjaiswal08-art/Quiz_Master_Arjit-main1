@@ -1,0 +1,111 @@
+{% extends "index.html" %}
+
+{% block content %}
+<nav class="modern-navbar">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand-custom" href="/admin">
+            <i class="bi bi-mortarboard-fill"></i>
+            Quiz Master
+        </a>
+        <ul class="navbar-nav-custom">
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/view_chapter/{{ quiz.chapter.id }}">
+                    <i class="bi bi-arrow-left"></i> Back to Chapter
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link-custom" href="/admin_logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="/view_subjects/{{ quiz.chapter.subject.id }}">{{ quiz.chapter.subject.name }}</a></li>
+            <li class="breadcrumb-item"><a href="/view_chapter/{{ quiz.chapter.id }}">{{ quiz.chapter.name }}</a></li>
+            <li class="breadcrumb-item active">{{ quiz.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title"><i class="bi bi-question-diamond text-primary"></i> {{ quiz.name }}</h1>
+        <p class="page-subtitle">
+            <i class="bi bi-calendar"></i> {{ quiz.date_of_quiz.strftime('%b %d, %Y') }} | 
+            <i class="bi bi-clock"></i> {{ quiz.time_duration }} min | 
+            {{ quiz.remarks or 'No remarks' }}
+        </p>
+    </div>
+
+    <!-- Questions Card -->
+    <div class="modern-card">
+        <div class="card-header-custom">
+            <div class="card-header-title">
+                <i class="bi bi-list-ol"></i> Questions
+            </div>
+            <a href="/create_question/{{ quiz.id }}" class="btn-custom btn-custom-primary btn-custom-sm">
+                <i class="bi bi-plus-lg"></i> Add Question
+            </a>
+        </div>
+        <div class="card-body-custom p-0">
+            {% if questions %}
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Correct</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for que in questions %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td style="max-width: 300px;">{{ que.question_text }}</td>
+                        <td>
+                            <div class="small text-muted">
+                                1. {{ que.option_1 }}<br>
+                                2. {{ que.option_2 }}<br>
+                                3. {{ que.option_3 }}<br>
+                                4. {{ que.option_4 }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-custom badge-custom-success">Option {{ que.correct_answer }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="/edit_question/{{ que.id }}" class="btn-custom btn-custom-info btn-custom-sm">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/delete_question/{{ que.id }}" class="btn-custom btn-custom-danger btn-custom-sm" onclick="return confirm('Delete this question?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-question-square empty-state-icon"></i>
+                <h4 class="empty-state-title">No Questions Yet</h4>
+                <p class="empty-state-desc">Add questions to this quiz</p>
+                <a href="/create_question/{{ quiz.id }}" class="btn-custom btn-custom-primary">
+                    <i class="bi bi-plus-lg"></i> Add Question
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

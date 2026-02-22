@@ -1,0 +1,49 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Quiz Score Statistics</h2>
+    <canvas id="quizChart"></canvas>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/quiz_scores")
+    .then(response => response.json())
+    .then(data => {
+        let quizLabels = data.map(q => "Quiz " + q.quiz_id);
+        let attemptsData = data.map(q => q.attempts);
+        let totalScoreData = data.map(q => q.total_score);
+
+        let ctx = document.getElementById("quizChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: quizLabels,
+                datasets: [
+                    {
+                        label: "Total Attempts",
+                        data: attemptsData,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)"
+                    },
+                    {
+                        label: "Total Score",
+                        data: totalScoreData,
+                        backgroundColor: "rgba(255, 99, 132, 0.6)"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    })
+    .catch(error => console.error("Error loading quiz data:", error));
+});
+</script>
+{% endblock %}
